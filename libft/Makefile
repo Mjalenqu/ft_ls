@@ -37,12 +37,12 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@ar rc $(NAME) $(OBJ)
-	@echo "\n"
+	#@echo "\n"
 	@ranlib $(NAME)
 
 %.o: %.c libft.h
 	@gcc $(FLAGS) -o $@ -c $<
-	@echo "$(BLUE).\c"
+	#@echo "$(BLUE).\c"
 
 clean:
 	@rm -rf $(OBJ)

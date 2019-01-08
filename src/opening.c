@@ -41,30 +41,6 @@ t_lst	*ft_newlist(char *name, size_t size)
 	return (lst);
 }
 
-void	print_list(t_lst *lst, char *file, t_flag *flag)
-{
-	if (flag->R == 1)
-		ft_putstr2(file, " :\n");
-	while (lst->next != NULL)
-	{
-		if (lst->info && lst->name[0] != '.')
-			print_stat(lst->info);
-		if (lst->type == 4 && lst->name[0] != '.')
-		{
-			ft_putcolor(CYAN, lst->name, RESET);
-			ft_putstr("\t");
-		}
-		else if (lst->name[0] != '.')
-			ft_putstr2(lst->name, "\t");
-		lst = lst->next;
-	}
-	if (lst->info && lst->name[0] != '.')
-		print_stat(lst->info);
-	if (lst->name[0] != '.')
-		ft_putstr(lst->name);
-	ft_putchar('\n');
-}
-
 void	lst_free(t_lst *lst)
 {
 	t_lst *point;
@@ -79,6 +55,8 @@ void	lst_free(t_lst *lst)
 			free(lst->info->login);
 			free(lst->info->group);
 			free(lst->info->time);
+			free(lst->info->octet);
+			free(lst->info->link);
 			free(lst->info);
 		}
 		lst = lst->next;
@@ -112,8 +90,9 @@ t_lst	*openit(char *file, t_flag *flag)
 		}
 		lst->size = ft_strlen(red->d_name);
 		lst->name = ft_strdup(red->d_name);
-		lst->type = red->d_type;
-		if (red->d_type == 4 && red->d_name[0] != '.')
+		lst->type = get_type(lst->name);
+		lst->sec = get_time(lst->name);
+		if ((lst->type == 'd' || red->d_type == 4) && red->d_name[0] != '.')
 		{
 			if (!(str = ft_join_path(file, lst->name)))
 			{

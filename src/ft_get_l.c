@@ -13,54 +13,6 @@
 
 #include "../includes/ft_ls.h"
 
-void	print_l(t_lst *lst, char *file, t_flag *flag)
-{
-	if (flag->R == 1)
-		ft_putstr2(file, " :\n");
-	while (lst->next != NULL)
-	{
-		if (lst->info && lst->name[0] != '.')
-			print_stat(lst->info);
-		if (lst->type == 4 && lst->name[0] != '.')
-		{
-			ft_putcolor(CYAN, lst->name, RESET);
-			ft_putstr("\n");
-		}
-		else if (lst->name[0] != '.')
-			ft_putstr2(lst->name, "\n");
-		lst = lst->next;
-	}
-	if (lst->info && lst->name[0] != '.')
-		print_stat(lst->info);
-	if (lst->name[0] != '.')
-		ft_putstr(lst->name);
-	ft_putchar('\n');
-}
-
-void	print_la(t_lst *lst, char *file, t_flag *flag)
-{
-	if (flag->R == 1)
-		ft_putstr2(file, " :\n");
-	while (lst->next != NULL)
-	{
-		if (lst->info)
-			print_stat(lst->info);
-		if (lst->type == 4)
-		{
-			ft_putcolor(CYAN, lst->name, RESET);
-			ft_putstr("\n");
-		}
-		else
-			ft_putstr2(lst->name, "\n");
-		lst = lst->next;
-	}
-	if (lst->info && lst->name[0] != '.')
-		print_stat(lst->info);
-	if (lst->name[0] != '.')
-		ft_putstr(lst->name);
-	ft_putchar('\n');
-}
-
 void	choose_print(t_lst *save, char *file, t_flag *flag)
 {
 	if (flag->l != 0)
@@ -69,6 +21,20 @@ void	choose_print(t_lst *save, char *file, t_flag *flag)
 			print_la(save, file, flag);
 		else
 			print_l(save, file, flag);
+	}
+	else if (flag->m != 0)
+	{
+		if (flag->a != 0)
+			print_ma(save, file, flag);
+		else
+			print_m(save, file, flag);
+	}
+	else if (flag->un != 0)
+	{
+		if (flag->a != 0)
+			print_una(save, file, flag);
+		else
+			print_un(save, file, flag);
 	}
 	else if (flag->a != 0)
 		print_option_a(save, file, flag);
@@ -97,6 +63,41 @@ void	print_right(int nb)
 	}
 }
 
+char		get_type(char *file)
+{
+	struct stat	*buf;
+	int 	red;
+	char		type;
+
+	type = 0;
+	buf = malloc(sizeof(struct stat));
+	red = lstat(file, buf);
+	if (S_ISDIR(buf->st_mode))
+		type = 'd';
+	else if (S_ISLNK(buf->st_mode))
+		type = 'l';
+	else
+		type = '-';
+	//printf("| %d |\n", S_ISLNK(buf->st_mode));
+	free(buf);
+	return (type);
+}
+
+int		get_time(char *file)
+{
+	struct stat	*buf;
+	int 	red;
+	long		sec;
+
+	sec = 0;
+	buf = malloc(sizeof(struct stat));
+	red = lstat(file, buf);
+	sec = buf->st_mtime;
+	//printf("sec = %ld\n", sec);
+	free(buf);
+	return (sec);
+}
+
 t_info	*ft_inspect_file(char *file)
 {
 	t_info			*st;
@@ -107,20 +108,21 @@ t_info	*ft_inspect_file(char *file)
 
 	st = malloc(sizeof(t_info));
 	buf = ((struct stat*)malloc(sizeof(struct stat)));
-	red = stat(file, buf);
+	red = lstat(file, buf);
 	groups = getgrgid(buf->st_gid);
 	passwds = getpwuid(buf->st_uid);
-	if (S_ISDIR(buf->st_mode))
-		st->type = 'd';
-	else if (S_ISLNK(buf->st_mode))
+	if (S_ISLNK(buf->st_mode))
 		st->type = 'l';
+	else if (S_ISDIR(buf->st_mode))
+		st->type = 'd';
 	else
 		st->type = '-';
+	st->blk = buf->st_blocks;
 	st->rwx = buf->st_mode;
-	st->link = buf->st_nlink;
+	st->link = ft_itoa(buf->st_nlink);
 	st->login = ft_strdup(passwds->pw_name);
 	st->group = ft_strdup(groups->gr_name);
-	st->octet = buf->st_size;
+	st->octet = ft_itoa(buf->st_size);
 	st->time = (ft_strsub((ctime(&buf->st_mtimespec.tv_sec)), 4, 12));
 	free(buf);
 	return (st);

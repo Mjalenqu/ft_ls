@@ -6,7 +6,7 @@
 /*   By: mjalenqu <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/07 10:14:37 by mjalenqu     #+#   ##    ##    #+#       */
-/*   Updated: 2019/01/02 16:51:38 by mjalenqu    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/01/08 14:39:10 by mjalenqu    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -21,11 +21,39 @@ void	error_flag(char c)
 	ft_putendl("usage: ls [-Radfglrtu] [file ...]");
 }
 
+int		check_flags_bis(t_flag *flag, char c)
+{
+	if (c == '1')
+	{
+		flag->un = 1;
+		flag->m = 0;
+		flag->l = 0;
+	}
+	else if (c == 'm')
+	{
+		flag->un = 0;
+		flag->m = 1;
+		flag->l = 0;
+	}
+	else if (c == 'd')
+		flag->d = 1;
+	else
+	{
+		error_flag(c);
+		return (-1);
+	}
+	return (1);
+}
+
 int		check_flags(t_flag *flag, char c)
 {
 	flag->nb = 1;
 	if (c == 'l')
+	{
 		flag->l = 1;
+		flag->un = 0;
+		flag->m = 0;
+	}
 	else if (c == 'a')
 		flag->a = 1;
 	else if (c == 'r')
@@ -40,12 +68,7 @@ int		check_flags(t_flag *flag, char c)
 		flag->f = 1;
 	else if (c == 'g')
 		flag->g = 1;
-	else if (c == 'd')
-		flag->d = 1;
-	else
-	{
-		error_flag(c);
+	else if ((check_flags_bis(flag, c)) == -1)
 		return (-1);
-	}
 	return (1);
 }

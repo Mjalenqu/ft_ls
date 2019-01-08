@@ -25,5 +25,7 @@ t_flag	*init_flag(t_flag *flag)
 	flag->f = 0;
 	flag->g = 0;
 	flag->d = 0;
+	flag->m = 0;
+	flag->un = 0;
 	return (flag);
 }

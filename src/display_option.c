@@ -1,60 +1,58 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   ft_join_path.c                                   .::    .:/ .      .::   */
+/*   display_option.c                                 .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: mjalenqu <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2018/12/08 07:38:59 by mjalenqu     #+#   ##    ##    #+#       */
-/*   Updated: 2019/01/06 16:07:27 by mjalenqu    ###    #+. /#+    ###.fr     */
+/*   Created: 2019/01/07 13:19:08 by mjalenqu     #+#   ##    ##    #+#       */
+/*   Updated: 2019/01/08 1'd':39:'d'9 by mjalenqu    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-char	*ft_join_path(char *s1, char *s2)
-{
-	char	*dest;
-	size_t	i;
-	size_t	j;
-
-	if (!(s1 && s2))
-		return (0);
-	i = -1;
-	j = 0;
-	if (!(dest = (char*)malloc(sizeof(char) *
-					(ft_strlen((char*)s1) + ft_strlen((char*)s2) + 2))))
-		return (0);
-	while (s1[++i])
-		dest[i] = s1[i];
-	dest[i] = '/';
-	i++;
-	while (s2[j])
-	{
-		dest[i] = s2[j];
-		i++;
-		j++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-void	print_option_a(t_lst *lst, char *file, t_flag *flag)
+void	print_ma(t_lst *lst, char *file, t_flag *flag)
 {
 	if (flag->R == 1)
 		ft_putstr2(file, " :\n");
 	while (lst->next != NULL)
 	{
-		if (lst->type == 4)
+		if (lst->type == 'd')
 		{
 			ft_putcolor(CYAN, lst->name, RESET);
-			ft_putstr("\t");
+			ft_putstr(" ,");
 		}
+		else if (lst->type == 'l')
+			ft_putcolor(PURPLE, lst->name, RESET);
 		else
-			ft_putstr2(lst->name, "\t");
+			ft_putstr2(lst->name, ", ");
 		lst = lst->next;
 	}
-	ft_putstr(lst->name);
+	if (lst->name[0] != '.')
+		ft_putstr(lst->name);
+	ft_putchar('\n');
+}
+
+void	print_una(t_lst *lst, char *file, t_flag *flag)
+{
+	if (flag->R == 1)
+		ft_putstr2(file, " :\n");
+	while (lst->next != NULL)
+	{
+		if (lst->type == 'd')
+		{
+			ft_putcolor(CYAN, lst->name, RESET);
+			ft_putstr("\n");
+		}
+		else if (lst->type == 'l')
+			ft_putcolor(PURPLE, lst->name, RESET);
+		else
+			ft_putstr2(lst->name, "\n");
+		lst = lst->next;
+	}
+	if (lst->name[0] != '.')
+		ft_putstr(lst->name);
 	ft_putchar('\n');
 }

@@ -14,7 +14,8 @@
 NAME=ft_ls
 CC=gcc
 SRC=src/opening.c src/check_flags.c src/ft_get_l.c src/ft_init_struct.c\
-		src/ft_join_path.c src/get_stat.c src/main.c src/sort_list.c
+		src/ft_join_path.c src/get_stat.c src/main.c src/sort_list.c src/display.c\
+		src/display_option.c
 
 CFLAGS += -Wall -Wextra -Werror -g
 
@@ -38,14 +39,17 @@ FLASH_GREEN = \033[33;32m
 
 all: $(NAME)
 
+.SILENT:
+	gcc
+
 $(NAME): $(OBJ)
 	@echo "$(LIGHT_GREEN)Compilation de la libft : "
 	@make -C libft
-	@$(CC) $(CFLAGS) -o $@ $^ $(LIB_PATH) -Iincludes
+	$(CC) $(CFLAGS) -o $@ $^ $(LIB_PATH) -Iincludes
 	@echo "$(FLASH_GREEN)$(NAME) compilé et prêt à l'usage !\n"
 
 %.o: %.c ft_ls.h
-	@$(CC) $(CFLAGS) -o $@ -c $< -Iincludes
+	$(CC) $(CFLAGS) -o $@ -c $< -Iincludes
 	@echo "$(DARK_BLUE.\c)"
 
 clean:
