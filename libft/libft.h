@@ -6,7 +6,7 @@
 /*   By: tprzybyl <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/10/03 11:20:22 by tprzybyl     #+#   ##    ##    #+#       */
-/*   Updated: 2018/12/08 07:55:56 by mjalenqu    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/01/11 09:20:41 by mjalenqu    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -45,11 +45,12 @@ char				*ft_itoa(int n);
 
 void				ft_putchar(char c);
 void				ft_putchar_fd(char c, int fd);
-
+void				ft_putsnb(char *s, int n, char *s2);
 void				ft_putstr(const char *str);
 void				ft_putstr_fd(const char *str, int fd);
 void				ft_putstr2(const char *str, char *str2);
 void				ft_putcolor(char *c1, char *str, char *c2);
+void				ft_putcolor2(char *s, char *s1, char *s2, char *s3);
 
 void				ft_putnbr(int num);
 void				ft_putnbr_fd(int n, int fd);

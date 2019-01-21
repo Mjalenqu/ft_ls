@@ -12,10 +12,10 @@
 # **************************************************************************** #
 
 NAME=ft_ls
-CC=gcc
+CC=@gcc
 SRC=src/opening.c src/check_flags.c src/ft_get_l.c src/ft_init_struct.c\
 		src/ft_join_path.c src/get_stat.c src/main.c src/sort_list.c src/display.c\
-		src/display_option.c
+		src/display_option.c src/sort_argv.c
 
 CFLAGS += -Wall -Wextra -Werror -g
 
@@ -39,8 +39,6 @@ FLASH_GREEN = \033[33;32m
 
 all: $(NAME)
 
-.SILENT:
-	gcc
 
 $(NAME): $(OBJ)
 	@echo "$(LIGHT_GREEN)Compilation de la libft : "

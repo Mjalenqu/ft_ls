@@ -6,94 +6,88 @@
 /*   By: mjalenqu <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/01/03 14:17:47 by mjalenqu     #+#   ##    ##    #+#       */
-/*   Updated: 2019/01/06 16:05:56 by mjalenqu    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/01/10 13:46:56 by mjalenqu    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-void	choose_print(t_lst *save, char *file, t_flag *flag)
-{
-	if (flag->l != 0)
-	{
-		if (flag->a != 0)
-			print_la(save, file, flag);
-		else
-			print_l(save, file, flag);
-	}
-	else if (flag->m != 0)
-	{
-		if (flag->a != 0)
-			print_ma(save, file, flag);
-		else
-			print_m(save, file, flag);
-	}
-	else if (flag->un != 0)
-	{
-		if (flag->a != 0)
-			print_una(save, file, flag);
-		else
-			print_un(save, file, flag);
-	}
-	else if (flag->a != 0)
-		print_option_a(save, file, flag);
-	else
-		print_list(save, file, flag);
-}
-
-void	print_right(int nb)
+char	*init_right(char *str)
 {
 	int i;
-	int c[3];
 
-	i = 3;
-	while (i--)
-	{
-		c[i] = nb % 8;
-		nb /= 8;
-	}
 	i = 0;
-	while (i < 3)
+	while (i < 9)
 	{
-		(c[i] & 4) ? write(1, "r", 1) : write(1, "-", 1);
-		(c[i] & 2) ? write(1, "w", 1) : write(1, "-", 1);
-		(c[i] & 1) ? write(1, "x", 1) : write(1, "-", 1);
+		str[i] = '-';
 		i++;
 	}
+	return (str);
 }
 
-char		get_type(char *file)
+void	get_right(int nb)
 {
-	struct stat	*buf;
-	int 	red;
+	static char right[9];
+
+	init_right(right);
+	right[0] = (nb & S_IRUSR) ? 'r' : '-';
+	right[1] = (nb & S_IWUSR) ? 'w' : '-';
+	right[2] = (nb & S_IXUSR) ? 'x' : '-';
+	right[3] = (nb & S_IRGRP) ? 'r' : '-';
+	right[4] = (nb & S_IWGRP) ? 'w' : '-';
+	right[5] = (nb & S_IXGRP) ? 'x' : '-';
+	right[6] = (nb & S_IROTH) ? 'r' : '-';
+	right[7] = (nb & S_IWOTH) ? 'w' : '-';
+	right[8] = (nb & S_IXOTH) ? 'x' : '-';
+	if (nb & S_ISUID)
+		right[2] = (nb & S_IXUSR) ? 's' : 'S';
+	if (nb & S_ISGID)
+		right[5] = (nb & S_IXGRP) ? 's' : 'l';
+	if (nb & S_ISVTX)
+		right[8] = (nb & S_IXOTH) ? 't' : 'T';
+	ft_putstr(right);
+}
+
+char	get_type(char *file)
+{
+	struct stat	buf;
+	int			red;
 	char		type;
 
 	type = 0;
-	buf = malloc(sizeof(struct stat));
-	red = lstat(file, buf);
-	if (S_ISDIR(buf->st_mode))
-		type = 'd';
-	else if (S_ISLNK(buf->st_mode))
+	red = lstat(file, &buf);
+	if (S_ISLNK(buf.st_mode))
 		type = 'l';
 	else
-		type = '-';
-	//printf("| %d |\n", S_ISLNK(buf->st_mode));
-	free(buf);
+	{
+		red = stat(file, &buf);
+		if (S_ISDIR(buf.st_mode))
+			type = 'd';
+		else	if (S_ISCHR(buf.st_mode))
+			type = 'c';
+		else if (S_ISBLK(buf.st_mode))
+			type = 'b';
+		else if (S_ISFIFO(buf.st_mode))
+			type = 'p';
+		else if (S_ISREG(buf.st_mode))
+			type = '-';
+		else
+			return (0);
+	}
 	return (type);
 }
 
 int		get_time(char *file)
 {
 	struct stat	*buf;
-	int 	red;
+	int			red;
 	long		sec;
 
 	sec = 0;
 	buf = malloc(sizeof(struct stat));
 	red = lstat(file, buf);
 	sec = buf->st_mtime;
-	//printf("sec = %ld\n", sec);
 	free(buf);
 	return (sec);
 }
@@ -111,19 +105,15 @@ t_info	*ft_inspect_file(char *file)
 	red = lstat(file, buf);
 	groups = getgrgid(buf->st_gid);
 	passwds = getpwuid(buf->st_uid);
-	if (S_ISLNK(buf->st_mode))
-		st->type = 'l';
-	else if (S_ISDIR(buf->st_mode))
-		st->type = 'd';
-	else
-		st->type = '-';
 	st->blk = buf->st_blocks;
 	st->rwx = buf->st_mode;
 	st->link = ft_itoa(buf->st_nlink);
 	st->login = ft_strdup(passwds->pw_name);
 	st->group = ft_strdup(groups->gr_name);
 	st->octet = ft_itoa(buf->st_size);
-	st->time = (ft_strsub((ctime(&buf->st_mtimespec.tv_sec)), 4, 12));
+	st->time = year(buf->st_mtime, st->time);
+	st->maj = major(buf->st_rdev);
+	st->min = minor(buf->st_rdev);
 	free(buf);
 	return (st);
 }

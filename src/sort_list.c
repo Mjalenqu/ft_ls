@@ -6,7 +6,7 @@
 /*   By: mjalenqu <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/08 09:04:17 by mjalenqu     #+#   ##    ##    #+#       */
-/*   Updated: 2019/01/02 17:09:05 by mjalenqu    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/01/14 17:45:36 by mjalenqu    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,23 +34,24 @@ void	lst_sort_ascii(t_lst **lst)
 	}
 }
 
-void	lst_sort_reverse(t_lst **lst)
+t_lst	*sort_r(t_lst **lst)
 {
-	if (!(*lst))
-		return ;
-	if ((*lst)->next && ft_strcmp((*lst)->name, (*lst)->next->name) < 0)
-		*lst = lst_swap(*lst, (*lst)->next);
-	lst_sort_reverse(&(*lst)->next);
-	if ((*lst)->next && ft_strcmp((*lst)->name, (*lst)->next->name) < 0)
+	t_lst	*sorted;
+	t_lst	*tmp;
+
+	sorted = NULL;
+	while (*lst)
 	{
-		*lst = lst_swap(*lst, (*lst)->next);
-		lst_sort_reverse(&(*lst)->next);
+		tmp = (*lst)->next;
+		(*lst)->next = sorted;
+		sorted = *lst;
+		*lst = tmp;
 	}
+	return (sorted);
 }
 
 void	lst_sort_time(t_lst **lst)
 {
-	//printf("OK");
 	if (!(*lst))
 		return ;
 	if ((*lst)->next && (*lst)->sec < (*lst)->next->sec)
@@ -65,37 +66,7 @@ void	lst_sort_time(t_lst **lst)
 
 void	lst_sort(t_lst **lst, t_flag *flag)
 {
+	lst_sort_ascii(lst);
 	if (flag->t != 0)
 		lst_sort_time(lst);
-	if (flag->r == 0)
-		lst_sort_ascii(lst);
-	else
-		lst_sort_reverse(lst);
 }
-/*
-int        sortt(t_ls *during, t_ls *last)
-{
-    int            i;
-    struct stat    *sduring;
-    struct stat    *slast;
-
-    sduring = malloc(sizeof(struct stat));
-    slast = malloc(sizeof(struct stat));
-    i = 0;
-    if (stat(during->path, sduring) < 0)
-    {
-        perror("during");
-        return (-2);
-    }
-    if (stat(last->path, slast) < 0)
-    {
-        perror("last");
-        return (-2);
-    }
-    if (sduring->st_mtime < slast->st_mtime)
-        return (-1);
-    else if (sduring->st_mtime > slast->st_mtime)
-        return (1);
-    else
-        return (0);
-}*/

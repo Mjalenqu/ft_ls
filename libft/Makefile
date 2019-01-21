@@ -6,7 +6,7 @@
 #    By: tprzybyl <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/10/03 11:36:22 by tprzybyl     #+#   ##    ##    #+#        #
-#    Updated: 2018/12/08 08:03:04 by mjalenqu    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/01/11 09:21:04 by mjalenqu    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -24,7 +24,8 @@ SRC=ft_atoi.c \
 	ft_strncmp.c ft_strncpy.c ft_strnequ.c ft_strnew.c ft_strnstr.c ft_strrchr.c \
 	ft_strsplit.c ft_strstr.c ft_strsub.c ft_strtrim.c ft_tolower.c ft_toupper.c \
 	ft_lstlen.c ft_islower.c ft_isupper.c ft_strfjoin.c ft_strclen.c ft_strfsub.c \
-	ft_strnclen.c ft_strcchr.c ft_arrstrdel.c ft_putstr2.c ft_putcolor.c
+	ft_strnclen.c ft_strcchr.c ft_arrstrdel.c ft_putstr2.c ft_putcolor.c ft_putsnb.c \
+	ft_putcolor2.c
 
 FLAGS= -Wall -Wextra -Werror -g
 
@@ -37,12 +38,12 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@ar rc $(NAME) $(OBJ)
-	#@echo "\n"
+	@echo "\n"
 	@ranlib $(NAME)
 
 %.o: %.c libft.h
 	@gcc $(FLAGS) -o $@ -c $<
-	#@echo "$(BLUE).\c"
+	@echo "$(BLUE).\c"
 
 clean:
 	@rm -rf $(OBJ)
