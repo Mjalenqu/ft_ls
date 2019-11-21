@@ -1,4 +1,4 @@
-Partie obligatoire
+Partie obligatoire :
 
 • Vous devez recoder la commande ls du système.
 
@@ -14,9 +14,7 @@ Partie obligatoire
 
 • L’affichage général, selon chaque option, doit rester sensiblement identique à celui de la commande système. Une certaine tolérance est appliquée sur le padding et la mise en page, mais il ne doit manquer aucune information.
 
-Partie bonus
-
-Les bonus ne seront évalués que si votre partie obligatoire est EXCELLENTE. On entend par là qu’elle est entièrement réalisée, que votre gestion d’erreur est au point, même dans des cas vicieux, ou des cas de mauvaise utilisation. Dans le cas contraire, vos bonus seront intégralement IGNORÉS. Voici quelques idées de bonus intéressants à réaliser, voire même utiles. Vous pouvez évidemment ajouter des bonus de votre invention, qui seront évalués à la discrétion de vos correcteurs.
+Partie bonus :
 
 • Gestion des ACL et des attributs étendus
 
